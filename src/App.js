@@ -5,7 +5,7 @@ import { Container, Typography } from '@mui/material';
 import "fontsource-roboto"
 
 
-class App extends Component {
+class App extends Component { 
 
   render() {
     return (
