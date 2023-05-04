@@ -1,28 +1,38 @@
-import React, {useState} from "react";
+import React, {useState, useContext} from "react";
 import { TextField, Button, Switch, FormControlLabel }  from "@mui/material/";
+import ValidacoesCadastro from "../../contexts/ValidacoesCadastro";
+import useErros from "../../hooks/useErros";
 
-function FormularioCadastro({aoEnviar, validarCPF}) {
+
+function DadosPessoais({aoEnviar}) {
 
     const [nome, setNome] = useState("");
     const [sobrenome, setSobrenome] = useState("");
     const [cpf, setCPF] = useState("");
     const [promocoes, setPromocao] = useState(true);
     const [novidades, setNovidades] = useState(true);
-    const [erros, setErros] = useState({cpf:{valido:true, texto:""}})
+    const [erros, validarCampos, possoEnviar] = useErros(validacoes);
+    const validacoes =  useContext(ValidacoesCadastro);
 
-     return(
-        <form onSubmit={(evento) => {
-            evento.preventDefault()
-            aoEnviar({nome, cpf, sobrenome, promocoes, novidades})
+    
+     return (
+       <form onSubmit={(evento) => {
+         evento.preventDefault();
+         if(possoEnviar()) {
+            aoEnviar({nome, sobrenome, cpf, novidades, promocoes});
+        }
         }} >
           <TextField 
             value={nome}
             onChange={(evento) => {
-            setNome(evento.target.value);
+            setNome(evento.target.valido);
          }}
-
+            onBlur={validarCampos}
+            error={!erros.nome.valido}
+            helperText={erros.nome.texto}
             id="nome" 
             label="Nome" 
+            name="nome"
             variant="outlined" 
             margin="normal" 
             fullWidth />
@@ -34,6 +44,7 @@ function FormularioCadastro({aoEnviar, validarCPF}) {
              }}
             id="sobrenome" 
             label="Sobrenome" 
+            name="sobrenome"
             variant="outlined" 
             margin="normal" 
             fullWidth />
@@ -44,13 +55,11 @@ function FormularioCadastro({aoEnviar, validarCPF}) {
              setCPF(evento.target.value);
             }}
             
-            onBlur={(evento) => {
-                const ehValido = validarCPF(cpf);
-                setErros({cpf:ehValido})
-            }}
+            onBlur={validarCampos}
             error={!erros.cpf.valido}
             helperText={erros.cpf.texto}
-            id="cpf" 
+            id="CPF" 
+            name="cpf"
             label="CPF" 
             variant="outlined" 
             margin="normal" 
@@ -74,10 +83,10 @@ function FormularioCadastro({aoEnviar, validarCPF}) {
             }} name="novidades" 
                 />} />
 
-            <Button variant="contained" type="submit">Cadastrar</Button>
+            <Button type="submit" color="primary" variant="contained" >Proximo</Button>
         </form>
 
      )
 }
 
-export default FormularioCadastro ;
+export default DadosPessoais;
