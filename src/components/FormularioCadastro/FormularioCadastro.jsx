@@ -10,8 +10,8 @@ function FormularioCadastro({ aoEnviar }) {
     
     useEffect(()=>  {
         if(etapaAtual === formularios.length-1) {
-        aoEnviar(dadosColetados)
-        }
+        aoEnviar(dadosColetados)  
+        } 
     })
     
     const formularios = [
